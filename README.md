@@ -24,7 +24,7 @@ Track My Comments is a Visual Studio Code extension that helps you manage and na
 ```
 
 4. Save your files to trigger the extension to scan for comments automatically.
-5. Access the generated Markdown file to view and navigate through your comments efficiently.
+5. Access the generated Markdown file named `comments.md` in the root folder to view and navigate through your comments efficiently.
 
 ## Contributions and Bug Reports:
 
@@ -45,5 +45,7 @@ Calling out known issues can help limit users opening duplicate issues against y
 ### Features
 
 - Initial release
+- Automatic Comment Tracking
+- Automatic navigation to comment location upon clicking a comment in the comments.md file
 
 ---
