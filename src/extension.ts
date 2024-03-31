@@ -10,7 +10,6 @@ export function activate(context: vscode.ExtensionContext) {
     "track-my-comments.trackComments",
     () => {
       vscode.workspace.onDidSaveTextDocument((e) => {
-        console.log(e.fileName);
         if (e.fileName.includes("comments.md")) {
           return;
         }
@@ -38,14 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
                   "Markdown file generated successfully."
                 );
                 console.log("Markdown file generated successfully.");
-
-                // const uri = vscode.Uri.file(markdownFilePath);
-                // const comment = "#TODO this also";
-                // vscode.commands.executeCommand(
-                //   "track-my-comments.openFile",
-                //   uri,
-                //   comment
-                // );
               }
             );
           } else {
@@ -97,7 +88,6 @@ export function activate(context: vscode.ExtensionContext) {
 
           if (fs.existsSync(markdownFilePath)) {
             let data: string = fs.readFileSync(markdownFilePath, "utf8");
-            console.log(markdownFilePath);
 
             data = data.replace(
               new RegExp(
@@ -186,6 +176,7 @@ export function activate(context: vscode.ExtensionContext) {
       );
     }
   );
+  vscode.commands.executeCommand("track-my-comments.trackComments");
   context.subscriptions.push(tracker, openFile);
 }
 
