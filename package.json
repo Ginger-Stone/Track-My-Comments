@@ -8,11 +8,12 @@
   "description": "An extension to help organize and track comments during development to allow for easy view existing comments and return to where they are  even when page is closed.",
   "version": "0.0.1",
   "publisher": "doreenchemweno",
+  "icon": "./images/logo.png",
   "engines": {
     "vscode": "^1.87.0"
   },
   "categories": [
-    "Other"
+    "Formatters"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
