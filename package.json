@@ -6,7 +6,7 @@
     "url": "https://github.com/Ginger-Stone/Track-My-Comments.git"
   },
   "description": "An extension to help organize and track comments during development to allow for easy view existing comments and return to where they are  even when page is closed.",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "publisher": "doreenchemweno",
   "icon": "./images/logo.png",
   "engines": {
@@ -16,8 +16,7 @@
     "Formatters"
   ],
   "activationEvents": [
-    "onStartup",
-    "onWorkspaceOpened"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
