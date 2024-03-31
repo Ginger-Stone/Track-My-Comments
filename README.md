@@ -15,8 +15,16 @@ Track My Comments is a Visual Studio Code extension that helps you manage and na
 
 1. Install the extension from the Visual Studio Code Marketplace.
 2. Open your project in Visual Studio Code.
-3. Save your files to trigger the extension to scan for comments automatically.
-4. Access the generated Markdown file to view and navigate through your comments efficiently.
+3. Use #TODO in your comments eg.
+
+```
+<!-- #TODO This is a comment that will be tracked -->
+
+// #TODO This is another comment that will be tracked
+```
+
+4. Save your files to trigger the extension to scan for comments automatically.
+5. Access the generated Markdown file to view and navigate through your comments efficiently.
 
 ## Contributions and Bug Reports:
 
@@ -24,7 +32,7 @@ Contributions and bug reports are welcome! Feel free to submit pull requests, op
 
 ## License:
 
-This extension is licensed under the [MIT License](LICENSE.md).
+This extension is licensed under the [MIT License](https://github.com/Ginger-Stone/Track-My-Comments?tab=MIT-1-ov-file).
 
 ## Known Issues
 

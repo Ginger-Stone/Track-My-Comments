@@ -1,8 +1,13 @@
 {
   "name": "track-my-comments",
   "displayName": "Track My Comments",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ginger-Stone/Track-My-Comments.git"
+  },
   "description": "An extension to help organize and track comments during development to allow for easy view existing comments and return to where they are  even when page is closed.",
   "version": "0.0.1",
+  "publisher": "doreenchemweno",
   "engines": {
     "vscode": "^1.87.0"
   },
