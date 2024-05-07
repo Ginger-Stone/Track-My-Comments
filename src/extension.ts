@@ -1,6 +1,131 @@
 import * as vscode from "vscode";
 const fs = require("fs");
 
+export function appendMarkdown(markdownContent: string) {
+  // Check if workspace is open and get rootPath
+  const rootPath = vscode.workspace.rootPath;
+  if (rootPath) {
+    const markdownFilePath = `${rootPath}/comments.md`;
+    fs.appendFile(markdownFilePath, markdownContent, function (err: any) {
+      if (err) {
+        console.error("Error appending to Markdown file:", err);
+        vscode.window.showErrorMessage(
+          "Error appending to Markdown file. Please save again."
+        );
+        throw err;
+      }
+      vscode.window.showInformationMessage(
+        "Markdown file generated successfully."
+      );
+      console.log("Markdown file generated successfully.");
+    });
+  } else {
+    console.error("Workspace folder not found.");
+    vscode.window.showErrorMessage("Workspace folder not found.");
+  }
+}
+
+export function replaceExistingMarkdown(markdownContent: string) {
+  // Check if workspace is open and get rootPath
+  const rootPath = vscode.workspace.rootPath;
+  if (rootPath) {
+    const markdownFilePath = `${rootPath}/comments.md`;
+    fs.writeFileSync(markdownFilePath, markdownContent, function (err: any) {
+      if (err) {
+        console.error("Error appending to Markdown file:", err);
+        vscode.window.showErrorMessage(
+          "Error appending to Markdown file. Please save again."
+        );
+        throw err;
+      }
+      vscode.window.showInformationMessage(
+        "Markdown file generated successfully."
+      );
+      console.log("Markdown file generated successfully.");
+
+      // const uri = vscode.Uri.file(markdownFilePath);
+      // const comment = "#TODO this also";
+      // vscode.commands.executeCommand(
+      //   "track-my-comments.openFile",
+      //   uri,
+      //   comment
+      // );
+    });
+  } else {
+    console.error("Workspace folder not found.");
+    vscode.window.showErrorMessage("Workspace folder not found.");
+  }
+}
+
+export function generateMarkdown(
+  fullFilenamePath: string,
+  comments: string[],
+  fileName: string
+) {
+  const rootPath = vscode.workspace.rootPath;
+  const markdownFilePath = `${rootPath}/comments.md`;
+  const fileCommentsStart = `## ${fileName}`;
+  const fileCommentsEnd = `## END OF ${fileName}`;
+
+  if (fs.existsSync(markdownFilePath)) {
+    let data: string = fs.readFileSync(markdownFilePath, "utf8");
+
+    data = data.replace(
+      new RegExp(
+        `${fileCommentsStart}[\\s\\S]*?${fileCommentsEnd}|\\n{2,}`,
+        "g"
+      ),
+      "\n"
+    );
+
+    replaceExistingMarkdown(data.trim());
+  }
+
+  let markdown = `\n\n${fileCommentsStart}\n`;
+
+  comments.forEach((comment) => {
+    const args = [fullFilenamePath, comment];
+    const myCommandUri = vscode.Uri.parse(
+      `command:track-my-comments.openFile?${encodeURIComponent(
+        JSON.stringify(args)
+      )}`
+    );
+    markdown += `- [${comment}](${myCommandUri})\n`;
+  });
+
+  markdown += `\n${fileCommentsEnd}\n`;
+
+  return markdown;
+}
+
+export function getComment(
+  startPos: number,
+  page: string,
+  comments: string[]
+): number {
+  let i = page.indexOf("#TODO", startPos);
+  let comment = "#";
+  while (page[i++] !== "\n" && i < page.length - 1) {
+    comment += page[i];
+  }
+  comments.push(comment.trimEnd());
+  // console.log(page);
+  return i; //return the next start pos
+}
+
+export function getComments(fileName: string, page: string) {
+  let comments: any[] = [];
+  let currStartPos: number = 0;
+  while (
+    page.includes("#TODO", currStartPos) &&
+    !fileName.includes("comments.md")
+  ) {
+    currStartPos = getComment(currStartPos, page, comments);
+  }
+  console.log(fileName, comments);
+  return comments;
+}
+
 export function activate(context: vscode.ExtensionContext) {
   console.log(
     'Congratulations, your extension "track-my-comments" is now active!'
@@ -13,135 +138,30 @@ export function activate(context: vscode.ExtensionContext) {
         if (e.fileName.includes("comments.md")) {
           return;
         }
-        let comments: any[] = [];
-        let page = e.getText();
+
         let fileName = vscode.workspace.asRelativePath(e.fileName); // Getting relative file path
 
-        function appendMarkdown(markdownContent: string) {
-          // Check if workspace is open and get rootPath
-          const rootPath = vscode.workspace.rootPath;
-          if (rootPath) {
-            const markdownFilePath = `${rootPath}/comments.md`;
-            fs.appendFile(
-              markdownFilePath,
-              markdownContent,
-              function (err: any) {
-                if (err) {
-                  console.error("Error appending to Markdown file:", err);
-                  vscode.window.showErrorMessage(
-                    "Error appending to Markdown file. Please save again."
-                  );
-                  throw err;
-                }
-                vscode.window.showInformationMessage(
-                  "Markdown file generated successfully."
-                );
-                console.log("Markdown file generated successfully.");
-              }
-            );
-          } else {
-            console.error("Workspace folder not found.");
-            vscode.window.showErrorMessage("Workspace folder not found.");
-          }
-        }
-        function replaceExistingMarkdown(markdownContent: string) {
-          // Check if workspace is open and get rootPath
-          const rootPath = vscode.workspace.rootPath;
-          if (rootPath) {
-            const markdownFilePath = `${rootPath}/comments.md`;
-            fs.writeFileSync(
-              markdownFilePath,
-              markdownContent,
-              function (err: any) {
-                if (err) {
-                  console.error("Error appending to Markdown file:", err);
-                  vscode.window.showErrorMessage(
-                    "Error appending to Markdown file. Please save again."
-                  );
-                  throw err;
-                }
-                vscode.window.showInformationMessage(
-                  "Markdown file generated successfully."
-                );
-                console.log("Markdown file generated successfully.");
+        let comments = getComments(e.fileName, e.getText());
 
-                // const uri = vscode.Uri.file(markdownFilePath);
-                // const comment = "#TODO this also";
-                // vscode.commands.executeCommand(
-                //   "track-my-comments.openFile",
-                //   uri,
-                //   comment
-                // );
-              }
-            );
-          } else {
-            console.error("Workspace folder not found.");
-            vscode.window.showErrorMessage("Workspace folder not found.");
-          }
-        }
-
-        function generateMarkdown(comments: string[]) {
-          const rootPath = vscode.workspace.rootPath;
-          const markdownFilePath = `${rootPath}/comments.md`;
-          const fileCommentsStart = `## ${fileName}`;
-          const fileCommentsEnd = `## END OF ${fileName}`;
-
-          if (fs.existsSync(markdownFilePath)) {
-            let data: string = fs.readFileSync(markdownFilePath, "utf8");
-
-            data = data.replace(
-              new RegExp(
-                `${fileCommentsStart}[\\s\\S]*?${fileCommentsEnd}|\\n{2,}`,
-                "g"
-              ),
-              "\n"
-            );
-
-            replaceExistingMarkdown(data.trim());
-          }
-
-          let markdown = `\n\n${fileCommentsStart}\n`;
-
-          comments.forEach((comment) => {
-            const args = [e.fileName, comment];
-            const myCommandUri = vscode.Uri.parse(
-              `command:track-my-comments.openFile?${encodeURIComponent(
-                JSON.stringify(args)
-              )}`
-            );
-            markdown += `- [${comment}](${myCommandUri})\n`;
-          });
-
-          markdown += `\n${fileCommentsEnd}\n`;
-
-          return markdown;
-        }
-
-        const getComment = (startPos: number): number => {
-          let i = page.indexOf("#TODO", startPos);
-          let comment = "#";
-          while (page[i++] !== "\n" && i < page.length - 1) {
-            comment += page[i];
-          }
-          comments.push(comment.trimEnd());
-          return i;
-        };
-
-        let currStartPos: number = 0;
-        while (
-          page.includes("#TODO", currStartPos) &&
-          !e.fileName.includes("comments.md")
-        ) {
-          currStartPos = getComment(currStartPos);
-        }
-
-        if (comments) {
-          const markdownContent = generateMarkdown(comments);
+        if (comments.length > 0) {
+          const markdownContent = generateMarkdown(
+            e.fileName,
+            comments,
+            fileName
+          );
 
           if (markdownContent) {
             appendMarkdown(markdownContent);
           }
         }
+
+        //     let page =
+        //       "#TODO new todo\n\
+        //  This is new\n\
+        //  A new line\n\
+        //  #TODO this";
+        //     // let comments: string[] = [];
+        //     console.log(getComment(0, page, comments));
       });
     }
   );
