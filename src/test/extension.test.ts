@@ -39,4 +39,6 @@ suite("Extension Test Suite", () => {
       "The TODOs have not been added correctly"
     );
   });
+
+  // #TODO add more tests...
 });

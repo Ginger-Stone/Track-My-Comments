@@ -24,6 +24,10 @@
       {
         "command": "track-my-comments.trackComments",
         "title": "Track Comments"
+      },
+      {
+        "command": "track-my-comments.refreshComments",
+        "title": "Refresh Comments - Scans all files"
       }
     ]
   },
