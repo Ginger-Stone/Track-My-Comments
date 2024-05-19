@@ -6,7 +6,7 @@
     "url": "https://github.com/Ginger-Stone/Track-My-Comments.git"
   },
   "description": "An extension to help organize and track comments during development to allow for easy view existing comments and return to where they are  even when page is closed.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "doreenchemweno",
   "icon": "./images/logo.png",
   "engines": {
@@ -24,6 +24,10 @@
       {
         "command": "track-my-comments.trackComments",
         "title": "Track Comments"
+      },
+      {
+        "command": "track-my-comments.refreshComments",
+        "title": "Refresh Comments - Scans all files"
       }
     ]
   },
@@ -36,14 +40,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "sinon": "^17.0.1"
   }
 }
